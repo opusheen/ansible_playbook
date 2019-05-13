@@ -1,0 +1,42 @@
+---
+- name: installation of apps, packaging and running
+  hosts: web
+  become: yes
+  
+  tasks:
+  - name: ensure maven is installed
+    apt:
+       name: maven
+       state: present
+       
+  - name: ensure tomcat is installed
+    apt:
+       name: tomcat8
+       state: present
+      
+  - name: ensure git is installed
+    apt:
+       name: git
+       state: present
+       
+  - name: ensure java is installed
+    apt:
+       name: default-jdk
+       state: present
+       
+   -name: set JAVA_HOME
+    command: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/   
+      
+  - name: clone project from git 
+    git:
+       repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git
+       dest: /home/project/
+    
+  - name: maven package
+    command: mvn package -f /home/project   
+
+  - name: copy war file
+    command: cp //home/project/target/hello-1.0.war /var/lib/tomcat8/webapps
+    
+   -name: restart tomcat
+    command: service tomcat8 restart
