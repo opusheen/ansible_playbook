@@ -41,7 +41,9 @@
        src: /home/project/target/hello-1.0.war
        dest: /var/lib/tomcat8/webapps
        force: yes
+    notify:
+       - tomcat8 restart
 
   handlers:
-   - name: tomcat8 start
-     service: name=tomcat8 state=started
+   - name: tomcat8 restart
+     service: name=tomcat8 state=restart
